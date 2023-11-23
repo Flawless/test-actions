@@ -49,7 +49,7 @@ jobs:
         exact-match: 'true'
     - name: export status
       id: check
-      run: echo "result=${{ !contains(steps.tagger.outputs.tag, 'NO_TAGS' && 'release') }}" >> $GITHUB_OUTPUT
+      run: echo "result=${{ !contains(steps.tagger.outputs.tag, 'NO_TAGS') && 'release' }}" >> $GITHUB_OUTPUT
     - name: Show out
       run: |
         echo 'Output from Find Tag: ${{ steps.tagger.outputs.tag }}'
@@ -62,18 +62,20 @@ jobs:
     if: ${{ needs.check-release.outputs.status }}
     steps:
     - name: if
-      run: echo ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status) }}
+      run: echo ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status == 'release') }}
     - name: destination
       run: echo ${{ github.event.inputs.destination }}
     - name: release
-      run: echo ${{ needs.check-release.outputs.status }}
+      run: echo ${{ needs.check-release.outputs.status == 'release' }}
+    - name: release2
+      run: echo ${{ needs.check-release.outputs.status == 'true' }}
   wtf-env:
     runs-on: ubuntu-latest
     needs: check-release
     if: ${{ github.event.inputs.destination == 'stage' }}
     steps:
     - name: if
-      run: echo ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status) }}
+      run: echo ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status == 'release') }}
     - name: destination
       run: echo ${{ github.event.inputs.destination }}
     - name: release
