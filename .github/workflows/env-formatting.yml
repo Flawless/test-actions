@@ -12,8 +12,6 @@ on:
         - stage
         - prod
 
-env:
-
 jobs:
   check-release:
     runs-on: ubuntu-latest
