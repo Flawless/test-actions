@@ -49,7 +49,7 @@ jobs:
         exact-match: 'true'
     - name: export status
       id: check
-      run: echo "result=${{ contains(steps.tagger.outputs.tag, 'NO_TAGS') }}" >> $GITHUB_OUTPUT
+      run: echo "result=${{ !contains(steps.tagger.outputs.tag, 'NO_TAGS') }}" >> $GITHUB_OUTPUT
     - name: Show out
       run: |
         echo 'Output from Find Tag: ${{ steps.tagger.outputs.tag }}'
