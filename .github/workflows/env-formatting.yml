@@ -25,4 +25,4 @@ jobs:
     - name: hello
       run: echo ${{ github.event.inputs.destination }}
     - name: dst
-      run: echo ${{ PROD_DST }}
+      run: echo ${{ env.PROD_DST }}
