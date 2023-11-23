@@ -93,9 +93,9 @@ jobs:
     #           "DATOMIC_SSH_KEY":  "${{ secrets.STAGE_STAGE_KEY }}",
     #         },
     #       }
-    - name: env
-      run: echo ${{ needs.check-release.outputs.status }}
-    - name: hello
+    - name: if
+      run: echo ${{ (needs.check-release.outputs.status || github.event.inputs.destination != 'prod') }}
+    - name: destination
       run: echo ${{ github.event.inputs.destination }}
-    - name: dst
-      run: echo ${{ env.DST }}
+    - name: release
+      run: echo ${{ needs.check-release.outputs.status }}
