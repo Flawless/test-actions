@@ -55,69 +55,44 @@ jobs:
         echo 'Output from Find Tag: ${{ steps.tagger.outputs.tag }}'
         echo 'Output from check: ${{ steps.check.outputs.result }}'
 
-
-  wtf-status:
-    runs-on: ubuntu-latest
-    needs: check-release
-    if: ${{ needs.check-release.outputs.status }}
-    steps:
-    - name: if
-      run: echo ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status == 'release') }}
-    - name: destination
-      run: echo ${{ github.event.inputs.destination }}
-    - name: release
-      run: echo ${{ needs.check-release.outputs.status == 'release' }}
-    - name: release2
-      run: echo ${{ needs.check-release.outputs.status == 'true' }}
-  wtf-env:
-    runs-on: ubuntu-latest
-    needs: check-release
-    if: ${{ github.event.inputs.destination == 'stage' }}
-    steps:
-    - name: if
-      run: echo ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status == 'release') }}
-    - name: destination
-      run: echo ${{ github.event.inputs.destination }}
-    - name: release
-      run: echo ${{ needs.check-release.outputs.status }}
   wtf:
     runs-on: ubuntu-latest
     needs: check-release
     if: ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status == 'release') }}
     steps:
-    # - name: Env mapping
-    #   uses: kanga333/variable-mapper@master
-    #   with:
-    #     key: "${{ github.event.inputs.destination }}"
-    #     map: |
-    #       {
-    #         "prod": {
-    #           "environment":      "production",
-    #           "APP_DIR":          "${{ env.PROD_APP_DIR }}",
-    #           "APP_SSH_HOST":     "${{ env.PROD_APP_SSH_HOST }}",
-    #           "APP_SSH_USER":     "${{ env.PROD_APP_SSH_USER }}",
-    #           "APP_SSH_PORT":     "${{ env.PROD_APP_SSH_PORT }}",
-    #           "APP_SSH_KEY":      "${{ secrets.PROD_SERVER_KEY }}",
-    #           "DATOMIC_DIR":      "${{ env.PROD_DATOMIC_DIR }}",
-    #           "DATOMIC_SSH_HOST": "${{ env.PROD_DATOMIC_SSH_HOST }}",
-    #           "DATOMIC_SSH_USER": "${{ env.PROD_DATOMIC_SSH_USER }}",
-    #           "DATOMIC_SSH_PORT": "${{ env.PROD_DATOMIC_SSH_PORT }}",
-    #           "DATOMIC_SSH_KEY":  "${{ secrets.PROD_SERVER_KEY }}",
-    #         },
-    #         "stage": {
-    #           "environment":      "staging",
-    #           "APP_DIR":          "${{ env.STAGE_APP_DIR }}",
-    #           "APP_SSH_HOST":     "${{ env.STAGE_APP_SSH_HOST }}",
-    #           "APP_SSH_USER":     "${{ env.STAGE_APP_SSH_USER }}",
-    #           "APP_SSH_PORT":     "${{ env.STAGE_APP_SSH_PORT }}",
-    #           "APP_SSH_KEY":      "${{ secrets.STAGE_SERVER_KEY }}",
-    #           "DATOMIC_DIR":      "${{ env.STAGE_DATOMIC_DIR }}",
-    #           "DATOMIC_SSH_HOST": "${{ env.STAGE_DATOMIC_SSH_HOST }}",
-    #           "DATOMIC_SSH_USER": "${{ env.STAGE_DATOMIC_SSH_USER }}",
-    #           "DATOMIC_SSH_PORT": "${{ env.STAGE_DATOMIC_SSH_PORT }}",
-    #           "DATOMIC_SSH_KEY":  "${{ secrets.STAGE_STAGE_KEY }}",
-    #         },
-    #       }
+    - name: Env mapping
+      uses: kanga333/variable-mapper@master
+      with:
+        key: "${{ github.event.inputs.destination }}"
+        map: |
+          {
+            "prod": {
+              "environment":      "production",
+              "APP_DIR":          "${{ env.PROD_APP_DIR }}",
+              "APP_SSH_HOST":     "${{ env.PROD_APP_SSH_HOST }}",
+              "APP_SSH_USER":     "${{ env.PROD_APP_SSH_USER }}",
+              "APP_SSH_PORT":     "${{ env.PROD_APP_SSH_PORT }}",
+              "APP_SSH_KEY":      "${{ secrets.PROD_SERVER_KEY }}",
+              "DATOMIC_DIR":      "${{ env.PROD_DATOMIC_DIR }}",
+              "DATOMIC_SSH_HOST": "${{ env.PROD_DATOMIC_SSH_HOST }}",
+              "DATOMIC_SSH_USER": "${{ env.PROD_DATOMIC_SSH_USER }}",
+              "DATOMIC_SSH_PORT": "${{ env.PROD_DATOMIC_SSH_PORT }}",
+              "DATOMIC_SSH_KEY":  "${{ secrets.PROD_SERVER_KEY }}",
+            },
+            "stage": {
+              "environment":      "staging",
+              "APP_DIR":          "${{ env.STAGE_APP_DIR }}",
+              "APP_SSH_HOST":     "${{ env.STAGE_APP_SSH_HOST }}",
+              "APP_SSH_USER":     "${{ env.STAGE_APP_SSH_USER }}",
+              "APP_SSH_PORT":     "${{ env.STAGE_APP_SSH_PORT }}",
+              "APP_SSH_KEY":      "${{ secrets.STAGE_SERVER_KEY }}",
+              "DATOMIC_DIR":      "${{ env.STAGE_DATOMIC_DIR }}",
+              "DATOMIC_SSH_HOST": "${{ env.STAGE_DATOMIC_SSH_HOST }}",
+              "DATOMIC_SSH_USER": "${{ env.STAGE_DATOMIC_SSH_USER }}",
+              "DATOMIC_SSH_PORT": "${{ env.STAGE_DATOMIC_SSH_PORT }}",
+              "DATOMIC_SSH_KEY":  "${{ secrets.STAGE_STAGE_KEY }}",
+            },
+          }
     - name: if
       run: echo ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status) }}
     - name: destination
