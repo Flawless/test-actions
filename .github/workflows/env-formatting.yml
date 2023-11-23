@@ -65,13 +65,13 @@ jobs:
       run: |
         echo environment=prod >> $GITHUB_ENV
         echo APP_DIR=${{ env.PROD_APP_DIR }} >> $GITHUB_ENV
-        echo DATOMIC_SSH_KEY=${{ secrets.PROD_SERVER_KEY }} >> $GITHUB_ENV
+        echo DATOMIC_SSH_KEY="${{ secrets.PROD_SERVER_KEY }}" >> $GITHUB_ENV
     - name: Env mapping stage
       if: github.event.inputs.destination == 'stage'
       run: |
         echo environment=stage >> $GITHUB_ENV
         echo APP_DIR=${{ env.STAGE_APP_DIR }} >> $GITHUB_ENV
-        echo DATOMIC_SSH_KEY=${{ secrets.STAGE_SERVER_KEY }} >> $GITHUB_ENV
+        echo DATOMIC_SSH_KEY="{{ secrets.STAGE_SERVER_KEY }}" >> $GITHUB_ENV
     - name: dir
       run: echo ${{ env.APP_DIR }}
     - name: env
