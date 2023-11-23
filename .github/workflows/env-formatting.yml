@@ -63,96 +63,20 @@ jobs:
     - name: Env mapping prod
       if: github.event.inputs.destination == 'prod'
       run: |
-        echo environment=prod >> $GITHUB_OUTPUT
-        echo APP_DIR=${{ env.PROD_APP_DIR }} >> $GITHUB_OUTPUT
-        echo APP_SSH_HOST=${{ env.PROD_APP_SSH_HOST }} >> $GITHUB_OUTPUT
-        echo APP_SSH_USER=${{ env.PROD_APP_SSH_USER }} >> $GITHUB_OUTPUT
-        echo APP_SSH_PORT=${{ env.PROD_APP_SSH_PORT }} >> $GITHUB_OUTPUT
-        echo APP_SSH_KEY=${{ secrets.PROD_SERVER_KEY }} >> $GITHUB_OUTPUT
-        echo DATOMIC_DIR=${{ env.PROD_DATOMIC_DIR }} >> $GITHUB_OUTPUT
-        echo DATOMIC_SSH_HOST=${{ env.PROD_DATOMIC_SSH_HOST }} >> $GITHUB_OUTPUT
-        echo DATOMIC_SSH_USER=${{ env.PROD_DATOMIC_SSH_USER }} >> $GITHUB_OUTPUT
-        echo DATOMIC_SSH_PORT=${{ env.PROD_DATOMIC_SSH_PORT }} >> $GITHUB_OUTPUT
-        echo DATOMIC_SSH_KEY=${{ secrets.PROD_SERVER_KEY }} >> $GITHUB_OUTPUT
+        echo environment=prod >> $GITHUB_ENV
+        echo APP_DIR=${{ env.PROD_APP_DIR }} >> $GITHUB_ENV
+        echo DATOMIC_SSH_KEY=${{ secrets.PROD_SERVER_KEY }} >> $GITHUB_ENV
     - name: Env mapping stage
       if: github.event.inputs.destination == 'stage'
       run: |
-        echo environment=stage >> $GITHUB_OUTPUT
-        echo APP_DIR=${{ env.STAGE_APP_DIR }} >> $GITHUB_OUTPUT
-        echo APP_SSH_HOST=${{ env.STAGE_APP_SSH_HOST }} >> $GITHUB_OUTPUT
-        echo APP_SSH_USER=${{ env.STAGE_APP_SSH_USER }} >> $GITHUB_OUTPUT
-        echo APP_SSH_PORT=${{ env.STAGE_APP_SSH_PORT }} >> $GITHUB_OUTPUT
-        echo APP_SSH_KEY=${{ secrets.STAGE_SERVER_KEY }} >> $GITHUB_OUTPUT
-        echo DATOMIC_DIR=${{ env.STAGE_DATOMIC_DIR }} >> $GITHUB_OUTPUT
-        echo DATOMIC_SSH_HOST=${{ env.STAGE_DATOMIC_SSH_HOST }} >> $GITHUB_OUTPUT
-        echo DATOMIC_SSH_USER=${{ env.STAGE_DATOMIC_SSH_USER }} >> $GITHUB_OUTPUT
-        echo DATOMIC_SSH_PORT=${{ env.STAGE_DATOMIC_SSH_PORT }} >> $GITHUB_OUTPUT
-        echo DATOMIC_SSH_KEY=${{ secrets.STAGE_SERVER_KEY }} >> $GITHUB_OUTPUT
-    - name: Env mapping
-      uses: kanga333/variable-mapper@master
-      with:
-        key: "${{ github.event.inputs.destination }}"
-        map: |
-          {
-            "prod": {
-              "environment":      "production",
-              "APP_DIR":          "${{ env.PROD_APP_DIR }}",
-              "APP_SSH_HOST":     "${{ env.PROD_APP_SSH_HOST }}",
-              "APP_SSH_USER":     "${{ env.PROD_APP_SSH_USER }}",
-              "APP_SSH_PORT":     "${{ env.PROD_APP_SSH_PORT }}",
-              "APP_SSH_KEY":      "${{ secrets.PROD_SERVER_KEY }}",
-              "DATOMIC_DIR":      "${{ env.PROD_DATOMIC_DIR }}",
-              "DATOMIC_SSH_HOST": "${{ env.PROD_DATOMIC_SSH_HOST }}",
-              "DATOMIC_SSH_USER": "${{ env.PROD_DATOMIC_SSH_USER }}",
-              "DATOMIC_SSH_PORT": "${{ env.PROD_DATOMIC_SSH_PORT }}",
-              "DATOMIC_SSH_KEY":  "${{ secrets.PROD_SERVER_KEY }}"
-            },
-            "stage": {
-              "environment":      "staging",
-              "APP_DIR":          "${{ env.STAGE_APP_DIR }}",
-              "APP_SSH_HOST":     "${{ env.STAGE_APP_SSH_HOST }}",
-              "APP_SSH_USER":     "${{ env.STAGE_APP_SSH_USER }}",
-              "APP_SSH_PORT":     "${{ env.STAGE_APP_SSH_PORT }}",
-              "APP_SSH_KEY":      "${{ secrets.STAGE_SERVER_KEY }}",
-              "DATOMIC_DIR":      "${{ env.STAGE_DATOMIC_DIR }}",
-              "DATOMIC_SSH_HOST": "${{ env.STAGE_DATOMIC_SSH_HOST }}",
-              "DATOMIC_SSH_USER": "${{ env.STAGE_DATOMIC_SSH_USER }}",
-              "DATOMIC_SSH_PORT": "${{ env.STAGE_DATOMIC_SSH_PORT }}",
-              "DATOMIC_SSH_KEY":  "${{ secrets.STAGE_STAGE_KEY }}"
-            }
-          }
-        # map: |
-        #   {
-        #     "prod": {
-        #       "environment":      "production",
-        #       "APP_DIR":          "${{ env.PROD_APP_DIR }}",
-        #       "APP_SSH_HOST":     "${{ env.PROD_APP_SSH_HOST }}",
-        #       "APP_SSH_USER":     "${{ env.PROD_APP_SSH_USER }}",
-        #       "APP_SSH_PORT":     "${{ env.PROD_APP_SSH_PORT }}",
-        #       "APP_SSH_KEY":      "${{ secrets.PROD_SERVER_KEY }}",
-        #       "DATOMIC_DIR":      "${{ env.PROD_DATOMIC_DIR }}",
-        #       "DATOMIC_SSH_HOST": "${{ env.PROD_DATOMIC_SSH_HOST }}",
-        #       "DATOMIC_SSH_USER": "${{ env.PROD_DATOMIC_SSH_USER }}",
-        #       "DATOMIC_SSH_PORT": "${{ env.PROD_DATOMIC_SSH_PORT }}",
-        #       "DATOMIC_SSH_KEY":  "${{ secrets.PROD_SERVER_KEY }}",
-        #     },
-        #     "stage": {
-        #       "environment":      "staging",
-        #       "APP_DIR":          "${{ env.STAGE_APP_DIR }}",
-        #       "APP_SSH_HOST":     "${{ env.STAGE_APP_SSH_HOST }}",
-        #       "APP_SSH_USER":     "${{ env.STAGE_APP_SSH_USER }}",
-        #       "APP_SSH_PORT":     "${{ env.STAGE_APP_SSH_PORT }}",
-        #       "APP_SSH_KEY":      "${{ secrets.STAGE_SERVER_KEY }}",
-        #       "DATOMIC_DIR":      "${{ env.STAGE_DATOMIC_DIR }}",
-        #       "DATOMIC_SSH_HOST": "${{ env.STAGE_DATOMIC_SSH_HOST }}",
-        #       "DATOMIC_SSH_USER": "${{ env.STAGE_DATOMIC_SSH_USER }}",
-        #       "DATOMIC_SSH_PORT": "${{ env.STAGE_DATOMIC_SSH_PORT }}",
-        #       "DATOMIC_SSH_KEY":  "${{ secrets.STAGE_STAGE_KEY }}",
-        #     },
-        #   }
-    - name: if
-      run: echo ${{ (github.event.inputs.destination == 'stage' || needs.check-release.outputs.status) }}
-    - name: destination
-      run: echo ${{ github.event.inputs.destination }}
-    - name: release
-      run: echo ${{ needs.check-release.outputs.status }}
+        echo environment=stage >> $GITHUB_ENV
+        echo APP_DIR=${{ env.STAGE_APP_DIR }} >> $GITHUB_ENV
+        echo DATOMIC_SSH_KEY=${{ secrets.STAGE_SERVER_KEY }} >> $GITHUB_ENV
+    - name: dir
+      run: echo ${{ env.APP_DIR }}
+    - name: env
+      run: echo ${{ environment }}
+    - name: env
+      run: echo ${{ env.environment }}
+    - name: ssh
+      run: echo ${{ env.DATOMIC_SSH_KEY }}
