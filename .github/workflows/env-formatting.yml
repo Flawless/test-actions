@@ -12,6 +12,25 @@ on:
         - stage
         - prod
 
+env:
+  STAGE_APP_DIR:          '/opt/aceplace-app'
+  STAGE_APP_SSH_HOST:     143.42.66.146
+  STAGE_APP_SSH_USER:     root
+  STAGE_APP_SSH_PORT:     22
+  STAGE_DATOMIC_DIR:      '/opt/datomic'
+  STAGE_DATOMIC_SSH_HOST: 143.42.66.146
+  STAGE_DATOMIC_SSH_USER: root
+  STAGE_DATOMIC_SSH_PORT: 22
+
+  PROD_APP_DIR:          '/opt/aceplace-app'
+  PROD_APP_SSH_HOST:     139.162.32.86
+  PROD_APP_SSH_USER:     root
+  PROD_APP_SSH_PORT:     22
+  PROD_DATOMIC_DIR:      '/opt/datomic-temp'
+  PROD_DATOMIC_SSH_HOST: 172.104.184.131
+  PROD_DATOMIC_SSH_USER: root
+  PROD_DATOMIC_SSH_PORT: 22
+
 jobs:
   check-release:
     runs-on: ubuntu-latest
@@ -41,6 +60,41 @@ jobs:
     needs: check-release
     if: ${{ (needs.check-release.outputs.result || github.event.inputs.destination != 'prod') }}
     steps:
+    - name: Env mapping
+      uses: kanga333/variable-mapper@master
+      with:
+        key: "${{ github.event.inputs.destination }}"
+        map: |
+          {
+            "prod": {
+              "environment":      "production",
+              "APP_DIR":          "${{ env.PROD_APP_DIR }}",
+              "APP_SSH_HOST":     "${{ env.PROD_APP_SSH_HOST }}",
+              "APP_SSH_USER":     "${{ env.PROD_APP_SSH_USER }}",
+              "APP_SSH_PORT":     "${{ env.PROD_APP_SSH_PORT }}",
+              "APP_SSH_KEY":      "${{ secrets.PROD_SERVER_KEY }}",
+              "DATOMIC_DIR":      "${{ env.PROD_DATOMIC_DIR }}",
+              "DATOMIC_SSH_HOST": "${{ env.PROD_DATOMIC_SSH_HOST }}",
+              "DATOMIC_SSH_USER": "${{ env.PROD_DATOMIC_SSH_USER }}",
+              "DATOMIC_SSH_PORT": "${{ env.PROD_DATOMIC_SSH_PORT }}",
+              "DATOMIC_SSH_KEY":  "${{ secrets.PROD_SERVER_KEY }}",
+            },
+            "stage": {
+              "environment":      "staging",
+              "APP_DIR":          "${{ env.STAGE_APP_DIR }}",
+              "APP_SSH_HOST":     "${{ env.STAGE_APP_SSH_HOST }}",
+              "APP_SSH_USER":     "${{ env.STAGE_APP_SSH_USER }}",
+              "APP_SSH_PORT":     "${{ env.STAGE_APP_SSH_PORT }}",
+              "APP_SSH_KEY":      "${{ secrets.STAGE_SERVER_KEY }}",
+              "DATOMIC_DIR":      "${{ env.STAGE_DATOMIC_DIR }}",
+              "DATOMIC_SSH_HOST": "${{ env.STAGE_DATOMIC_SSH_HOST }}",
+              "DATOMIC_SSH_USER": "${{ env.STAGE_DATOMIC_SSH_USER }}",
+              "DATOMIC_SSH_PORT": "${{ env.STAGE_DATOMIC_SSH_PORT }}",
+              "DATOMIC_SSH_KEY":  "${{ secrets.STAGE_STAGE_KEY }}",
+            },
+          }
+    - name: env
+      run: echo ${{ env.environment }}
     - name: hello
       run: echo ${{ github.event.inputs.destination }}
     - name: dst
