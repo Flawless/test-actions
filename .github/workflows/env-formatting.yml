@@ -13,7 +13,7 @@ on:
         - PROD
 
 env:
-  DST: ${{ vars[format('{0}_DST', github.event.inputs.destination] }}
+  DST: ${{ vars[format('{0}_DST', github.event.inputs.destination)] }}
 
 jobs:
   wtf:
