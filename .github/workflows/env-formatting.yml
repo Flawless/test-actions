@@ -7,15 +7,37 @@ on:
         required: true
         type: choice
         description: Where to deploy
-        default: 'STAGE'
+        default: 'stage'
         options:
-        - STAGE
-        - PROD
+        - stage
+        - prod
 
 env:
-  DST: ${{ vars[format('{0}_DST', github.event.inputs.destination)] }}
 
 jobs:
+  check-allowance:
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.check.outputs.result }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Find Tag
+      id: tagger
+      uses: digital-ai/query-tag-action@v2
+      with:
+        include: 'v*'
+        exclude: '*-rc*'
+        commit-ish: 'HEAD'
+        exact-match: 'true'
+    - name: Early exit
+      id: check
+      run: echo "result=${{ !(steps.tagger.outputs.tag == 'NO_TAGS' && github.event.inputs.destination == prod) }}" >> $GITHUB_OUTPUT
+    - name: Show out
+      run: |
+        echo 'Output from Find Tag: ${{ steps.tagger.outputs.tag }}'
+        echo 'Output from check: ${{ steps.check.outputs.result }}'
+
   wtf:
     runs-on: ubuntu-latest
     steps:
