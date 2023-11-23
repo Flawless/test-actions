@@ -70,11 +70,15 @@ jobs:
       if: github.event.inputs.destination == 'stage'
       run: |
         echo environment=stage >> $GITHUB_ENV
+        echo environmentlol="stage" >> $GITHUB_ENV
         echo APP_DIR=${{ env.STAGE_APP_DIR }} >> $GITHUB_ENV
         echo DATOMIC_SSH_KEY="{{ secrets.STAGE_SERVER_KEY }}" >> $GITHUB_ENV
     - name: dir
       run: echo ${{ env.APP_DIR }}
     - name: env
-      run: echo ${{ env.environment }}
+      run: |
+        echo ${{ env.environment }}
+        echo ${{ env.environmentlol }}
+        echo ${{ env.environmentlol == env.environment }}
     - name: ssh
       run: echo ${{ env.DATOMIC_SSH_KEY }}
