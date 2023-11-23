@@ -15,7 +15,7 @@ on:
 env:
 
 jobs:
-  check-allowance:
+  check-release:
     runs-on: ubuntu-latest
     outputs:
       status: ${{ steps.check.outputs.result }}
@@ -30,9 +30,9 @@ jobs:
         exclude: '*-rc*'
         commit-ish: 'HEAD'
         exact-match: 'true'
-    - name: Early exit
+    - name: export status
       id: check
-      run: echo "result=${{ !(steps.tagger.outputs.tag == 'NO_TAGS' && github.event.inputs.destination == prod) }}" >> $GITHUB_OUTPUT
+      run: echo "result=${{ !steps.tagger.outputs.tag == 'NO_TAGS' }}" >> $GITHUB_OUTPUT
     - name: Show out
       run: |
         echo 'Output from Find Tag: ${{ steps.tagger.outputs.tag }}'
@@ -40,6 +40,8 @@ jobs:
 
   wtf:
     runs-on: ubuntu-latest
+    needs: check-tagged-release
+    if: ${{ (needs.check-release.outputs.result || github.event.inputs.destination != 'prod') }}
     steps:
     - name: hello
       run: echo ${{ github.event.inputs.destination }}
