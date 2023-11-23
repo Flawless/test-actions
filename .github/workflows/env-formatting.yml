@@ -14,8 +14,8 @@ on:
 
 env:
   PREFIX: ${{ github.event.inputs.destination == 'prod' && 'PROD' || 'STAGE' }}
-  DST: ${{ vars.PROD_DST }}
-  # DST: ${{ vars.[format('{0}_DST', env.PREFIX)] }}
+  # DST: ${{ vars.PROD_DST }}
+  DST: ${{ vars[format('{0}_DST', env.PREFIX)] }}
 
 jobs:
   wtf:
