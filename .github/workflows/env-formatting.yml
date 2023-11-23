@@ -17,7 +17,6 @@ env:
 
 jobs:
   wtf:
-    env:
     runs-on: ubuntu-latest
     steps:
     - name: hello
