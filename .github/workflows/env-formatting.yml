@@ -1,0 +1,25 @@
+name: testing dynamic vars
+
+on:
+  workflow_dispatch:
+    inputs:
+      destination:
+        required: true
+        type: choice
+        description: Where to deploy
+        default: 'stage'
+        options:
+        - stage
+        - prod
+
+env:
+  PREFIX: ${{ github.event.inputs.destination == 'prod' && 'PROD' || 'STAGE' }}
+  PROD_DST: 'prod-dst'
+  STAGE_DST: 'stage-dst'
+  DST: ${{ vars.[format('{0}_DST', env.PREFIX)] }}
+
+jobs:
+  wtf:
+    runs-on: ubuntu-latest
+    steps:
+      run: echo ${{ env.DST }}
