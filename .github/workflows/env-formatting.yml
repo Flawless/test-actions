@@ -75,8 +75,6 @@ jobs:
     - name: dir
       run: echo ${{ env.APP_DIR }}
     - name: env
-      run: echo ${{ environment }}
-    - name: env
       run: echo ${{ env.environment }}
     - name: ssh
       run: echo ${{ env.DATOMIC_SSH_KEY }}
